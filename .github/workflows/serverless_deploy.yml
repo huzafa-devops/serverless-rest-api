@@ -26,7 +26,7 @@ jobs:
       uses: serverless/github-action@v3.2
     # - run: serverless --version
       with:
-        args: deploy --verbose
+        args: deploy --help
       env:
         # or if using AWS credentials directly
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
