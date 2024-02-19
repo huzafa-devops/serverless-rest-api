@@ -27,4 +27,12 @@ fi
 # Replace the 'vpc' value in serverless.yml
 sed -i -e "s/vpc: .*/vpc: $vpc_value/" serverless.yml
 rm serverless.yml-e
-
+####################################
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        vpc_value="dev-vpc"
+         if [[ "$branch_name" == "main" ]]; then
+          vpc_value="prod-vpc"
+         fi
+      
+        sed -i -e "s/vpc: .*/vpc: $vpc_value/" serverless.yml
+        cat serverless.yaml

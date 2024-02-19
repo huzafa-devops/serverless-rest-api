@@ -13,14 +13,27 @@ jobs:
         matrix:
           node-version: [18.x]
           go: ['1.21.x']
+    # outputs:
+    #     stage: ${{ steps.stage_name.outputs.stage }}
     steps:
     - uses: actions/checkout@v4
+
+    - name: Stage Name
+      id: stage_name
+      run: |
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        stage="dev"
+         if [[ "$branch_name" == "main" ]]; then
+          stage="prod"
+         fi
+         echo $stage
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go }}
-    - run: go version 
+    - run: |
+        go version
 
     - name: Build
       run: env GOOS=linux go build -ldflags="-s -w" -o bin/main main.go
@@ -30,10 +43,20 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: serverless deploy
+    - name: serverless deploy to prod
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       uses: serverless/github-action@v3.2
       with:
-       args: deploy --help
+       args: print
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: serverless deploy to dev
+      if: ${{ github.ref != 'refs/heads/main' }}
+      uses: serverless/github-action@v3.2
+      with:
+       args: print
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

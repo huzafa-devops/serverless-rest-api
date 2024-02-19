@@ -4,13 +4,29 @@ frameworkVersion: '>=3.22.0'
 # plugins:
 #   - serverless-offline
 
+custom:
+    dev:
+      subnet_a: subnet-0875406e91d01a377
+      subnet_b: subnet-0d9b9e2a28c8c8159
+      securityGroup: sg-034b25dd44791f612
+    prod:
+      subnet_a: subnet-03b345e2b8397f0f3
+      subnet_b: subnet-dev-2
+      securityGroup: ssg-034b25dd44791f612
+
 provider:
   name: aws
   architecture: x86_64
   runtime: go1.x
   region: eu-central-1
-  stage: local
-  vpc: dev-vpc
+  stage: ${opt:stage, 'dev'}
+   
+  vpc:
+    securityGroupIds:
+      - ${self:custom.${opt:stage, 'dev'}.securityGroup}
+    subnetIds:
+      - ${self:custom.${opt:stage, 'dev'}.subnet_a}
+      - ${self:custom.${opt:stage, 'dev'}.subnet_b}
 
 functions:
   testLambdaApiGw:
