@@ -1,12 +1,15 @@
 service: serverless-rest-api
-frameworkVersion: '>=1.28.0'
+frameworkVersion: '>=3.22.0'
+
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
-  architecture: x86_64
+  # architecture: x86_64
   runtime: go1.x
-  region: eu-central-1
-  stage: ${opt:stage}
+  # region: eu-central-1
+  stage: local
 functions:
   api:
     handler: bin/main
@@ -17,4 +20,9 @@ functions:
 package:
   patterns:
     - '!*/**'
-    - bin/main
+    - ./bin/main
+
+# package:
+#   include:
+#     - ./bin/main    
+

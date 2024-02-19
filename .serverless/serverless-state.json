@@ -9,7 +9,7 @@
       "architecture": "x86_64",
       "runtime": "go1.x",
       "region": "eu-central-1",
-      "stage": "dev",
+      "stage": "local",
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -175,7 +175,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-rest-api/dev/1707761414019-2024-02-12T18:10:14.019Z/serverless-rest-api.zip"
+                "S3Key": "serverless/serverless-rest-api/dev/1707898576665-2024-02-14T08:16:16.665Z/serverless-rest-api.zip"
               },
               "Handler": "bin/main",
               "Runtime": "go1.x",
@@ -196,14 +196,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersion17zDFXb9mR6rPrKSbBuz0ZPAOOuuewERoA1JqlxVA": {
+          "ApiLambdaVersionPiSh29MlpmgwoOYvJssJXDwO8g4JZL3Bhoowjo0iQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "Gu9k4TZqqYrRfhtHFGks9I8FPk6xtWXgWxoJoQ1GS1M="
+              "CodeSha256": "VpyPQ2qJkGu29ntXVBPrIITTjbKj0kCN2ADipV3u/7o="
             }
           },
           "ApiGatewayRestApi": {
@@ -279,7 +279,7 @@
               "ApiLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1707761413174": {
+          "ApiGatewayDeployment1707898575207": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -341,7 +341,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersion17zDFXb9mR6rPrKSbBuz0ZPAOOuuewERoA1JqlxVA"
+              "Ref": "ApiLambdaVersionPiSh29MlpmgwoOYvJssJXDwO8g4JZL3Bhoowjo0iQ"
             },
             "Export": {
               "Name": "sls-serverless-rest-api-dev-ApiLambdaFunctionQualifiedArn"
@@ -478,14 +478,14 @@
         "timeout": 6,
         "runtime": "go1.x",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersion17zDFXb9mR6rPrKSbBuz0ZPAOOuuewERoA1JqlxVA"
+        "versionLogicalId": "ApiLambdaVersionPiSh29MlpmgwoOYvJssJXDwO8g4JZL3Bhoowjo0iQ"
       }
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
     "initialServerlessConfig": {
       "service": "serverless-rest-api",
-      "frameworkVersion": ">=1.28.0",
+      "frameworkVersion": ">=3.22.0",
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
       },
@@ -495,11 +495,11 @@
       "package": {
         "patterns": [
           "!*/**",
-          "bin/main"
+          "./bin/main"
         ],
         "artifactsS3KeyDirname": "serverless/serverless-rest-api/dev/code-artifacts",
         "artifact": "/Users/huzafa/github-personal/serverless-rest-api/.serverless/serverless-rest-api.zip",
-        "artifactDirectoryName": "serverless/serverless-rest-api/dev/1707761414019-2024-02-12T18:10:14.019Z"
+        "artifactDirectoryName": "serverless/serverless-rest-api/dev/1707898576665-2024-02-14T08:16:16.665Z"
       }
     },
     "layers": {},
@@ -507,7 +507,7 @@
     "artifact": "/Users/huzafa/github-personal/serverless-rest-api/.serverless/serverless-rest-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-rest-api/dev/1707761414019-2024-02-12T18:10:14.019Z",
+    "artifactDirectoryName": "serverless/serverless-rest-api/dev/1707898576665-2024-02-14T08:16:16.665Z",
     "artifact": "serverless-rest-api.zip"
   }
 }
