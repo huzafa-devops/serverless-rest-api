@@ -1,4 +1,4 @@
-name: Deploy master branch
+name: Deploy lambda and api gateway
 
 on:
   push:
@@ -19,7 +19,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
 
     # - name: serverless deploy
     #   run: npx serverless --version

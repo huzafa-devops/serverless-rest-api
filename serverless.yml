@@ -11,7 +11,7 @@ provider:
   region: eu-central-1
   stage: local
 functions:
-  api:
+  testLambdaApiGw:
     handler: bin/main
     events:
       - http:
