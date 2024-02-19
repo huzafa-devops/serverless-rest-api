@@ -1,17 +1,14 @@
 name: Remove lambda and api gateway
 
-on: [workflow_dispatch]
-#  workflow_dispatch:
-#     inputs:
-#         remove:
-#             description: 'Are you sure you want to remove Lambda/api gateway'
-#             required: true
-#             type: boolean
-#             default: false
-#  push:
-#     branches:
-#       - main
-#       - '*'
+on:
+ workflow_dispatch:
+    inputs:
+        remove:
+            description: 'Are you sure you want to remove Lambda/api gateway'
+            required: true
+            type: boolean
+            default: false
+
   
 jobs:
   deploy:
