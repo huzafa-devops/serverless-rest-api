@@ -14,19 +14,31 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
+    # - name: Checkout
     - uses: actions/checkout@v3
+
+    # - name: Build
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '1.21.4'
+    - run: |
+          go version
+          env GOOS=linux go build -ldflags="-s -w" -o bin/main main.go
+          go test -v ./bin
+          ls ./bin
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
 
-    # - name: serverless deploy
-    #   run: npx serverless --version
+
+
     - name: serverless deploy
       uses: serverless/github-action@v3.2
     # - run: serverless --version
       with:
-        args: deploy --verbose
+        args: deploy --help
       env:
         # or if using AWS credentials directly
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
