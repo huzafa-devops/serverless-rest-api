@@ -25,7 +25,7 @@ provider:
     securityGroupIds:
       - ${self:custom.${opt:stage, 'dev'}.securityGroup}
     subnetIds:
-      - ${self:custom.${opt:stage, 'dev'}.subnet_a}
+      # -  ${file(./config/.env.${opt:stage, 'dev'}.yml):subnet_a}               #${self:custom.${opt:stage, 'dev'}.subnet_a}
       - ${self:custom.${opt:stage, 'dev'}.subnet_b}
 
 functions:
@@ -39,8 +39,3 @@ package:
   patterns:
     - '!*/**'
     - ./bin/main
-
-# package:
-#   include:
-#     - ./bin/main    
-

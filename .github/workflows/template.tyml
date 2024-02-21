@@ -1,0 +1,86 @@
+name: Go-Rest-Cli CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          node-version: 20
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Build
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          make build
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-with-serverless
+          path: |
+            bin/main
+            serverless.yml
+            package.json
+            package-lock.json
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          node-version: 20
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      - name: Test
+        run: go test -v ./...
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main') }}
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-with-serverless
+      - uses: actions/checkout@v4
+        with:
+          node-version: 20
+      - name: Get stage name
+        id: stage_name
+        run: |
+          branch_name=$(git rev-parse --abbrev-ref HEAD)
+          stage="dev"
+           if [[ "$branch_name" == "main" ]]; then
+            stage="prod"
+           fi
+           stage_upper_case=$(echo "$stage" | tr '[:lower:]' '[:upper:]')
+           echo "STAGE=$stage" >> "$GITHUB_ENV"
+           echo "STAGE_UPPER_CASE=$stage_upper_case" >> "$GITHUB_ENV"
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - name: Create .env file
+        run: |         
+          echo "DATABASE_URL=${{ secrets[format('DATABASE_URL_{0}', env.STAGE_UPPER_CASE)] }}" >> .env
+          echo "KEYCLOAK_PUB_KEY=${{ secrets[format('KEYCLOAK_PUB_KEY_{0}', env.STAGE_UPPER_CASE)] }}" >> .env
+          echo "ORIGIN=${{ secrets[format('ORIGIN_{0}', env.STAGE_UPPER_CASE)] }}" >> .env
+
+      - name: Serverless deployment to AWS
+        run: |
+          npm i -g serverless@3.38.0
+          npm ci
+          serverless deploy --stage ${{ env.STAGE }} --verbose
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets[format('AWS_ACCESS_KEY_ID_{0}', env.STAGE_UPPER_CASE)] }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets[format('AWS_SECRET_ACCESS_KEY_{0}', env.STAGE_UPPER_CASE)] }}
